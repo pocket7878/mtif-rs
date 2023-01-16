@@ -1,13 +1,16 @@
 [package]
+authors = [
+  "Pocket7878 <poketo7878@gmail.com>",
+]
+description = "Movable Type Import Format file parser"
 edition = "2021"
+license-file = "LICENCE"
 name = "mtif"
+repository = "https://github.com/pocket7878/mtif-rs"
 version = "0.1.0"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 nom = "7"
-nom-bufreader = "0.2.0"
 time = {version = "0.3.17", features = ["std", "macros"]}
 
 [dev-dependencies]
