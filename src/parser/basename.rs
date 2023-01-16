@@ -1,4 +1,4 @@
-use crate::model::MetaData;
+use super::MetaDataField;
 use nom::{
     bytes::{self},
     IResult,
@@ -7,11 +7,11 @@ use nom::{
 use super::utils::parse_until_line_ending;
 
 // BASENAME: <text>\n
-pub fn parse_basename_data(input: &str) -> IResult<&str, MetaData> {
-    let (input, _) = bytes::streaming::tag("BASENAME: ")(input)?;
+pub fn parse_basename_data(input: &str) -> IResult<&str, MetaDataField> {
+    let (input, _) = bytes::complete::tag("BASENAME: ")(input)?;
     let (input, text) = parse_until_line_ending(input)?;
 
-    Ok((input, MetaData::BaseName(text.to_string())))
+    Ok((input, MetaDataField::BaseName(text.to_string())))
 }
 
 #[cfg(test)]
@@ -22,7 +22,7 @@ mod tests {
     fn test_parse_basename_data() {
         assert_eq!(
             parse_basename_data("BASENAME: filename\n"),
-            Ok(("", MetaData::BaseName("filename".to_string())))
+            Ok(("", MetaDataField::BaseName("filename".to_string())))
         );
     }
 }

@@ -1,15 +1,15 @@
 use nom::{bytes, IResult};
 
-use crate::model::MetaData;
+use super::MetaDataField;
 
 use super::utils::parse_num_bool_flag;
 
 // ALLOW COMMENTS: 0|1\n
-pub fn parse_allow_comments_data(input: &str) -> IResult<&str, MetaData> {
-    let (input, _) = bytes::streaming::tag("ALLOW COMMENTS: ")(input)?;
+pub fn parse_allow_comments_data(input: &str) -> IResult<&str, MetaDataField> {
+    let (input, _) = bytes::complete::tag("ALLOW COMMENTS: ")(input)?;
     let (input, flag) = parse_num_bool_flag(input)?;
 
-    Ok((input, MetaData::AllowComments(flag)))
+    Ok((input, MetaDataField::AllowComments(flag)))
 }
 
 #[cfg(test)]
@@ -20,11 +20,11 @@ mod tests {
     fn test_parse_allow_comments_data() {
         assert_eq!(
             parse_allow_comments_data("ALLOW COMMENTS: 0\n"),
-            Ok(("", MetaData::AllowComments(false)))
+            Ok(("", MetaDataField::AllowComments(false)))
         );
         assert_eq!(
             parse_allow_comments_data("ALLOW COMMENTS: 1\n"),
-            Ok(("", MetaData::AllowComments(true)))
+            Ok(("", MetaDataField::AllowComments(true)))
         );
     }
 }
