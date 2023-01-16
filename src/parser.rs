@@ -23,7 +23,7 @@ mod tags;
 mod title;
 mod utils;
 
-use crate::model::{ConvertBreaks, MetaData, Status};
+use crate::model::{ConvertBreaks, Status};
 
 use nom::{
     branch,
@@ -77,7 +77,7 @@ pub enum MultiLineField<'a> {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub struct MTIFEntry<'a> {
+pub struct RawMTIFEntry<'a> {
     pub metadata: Vec<MetaDataField<'a>>,
     pub multiline_data: Vec<MultiLineField<'a>>,
 }
@@ -121,21 +121,21 @@ fn parse_multiline_data_section(input: &str) -> IResult<&str, Vec<MultiLineField
 }
 
 // MTIF parser
-fn parse_mtif_entry(input: &str) -> IResult<&str, MTIFEntry> {
+fn parse_mtif_entry(input: &str) -> IResult<&str, RawMTIFEntry> {
     let (input, metadata) = parse_metadata_section(input)?;
     let (input, multiline_data) = parse_multiline_data_section(input)?;
     let (input, _) = bytes::complete::tag("--------")(input)?;
 
     Ok((
         input,
-        MTIFEntry {
+        RawMTIFEntry {
             metadata,
             multiline_data,
         },
     ))
 }
 
-pub fn parse_mtif(input: &str) -> IResult<&str, Vec<MTIFEntry>> {
+pub fn parse_mtif(input: &str) -> IResult<&str, Vec<RawMTIFEntry>> {
     terminated(
         multi::separated_list0(newline, parse_mtif_entry),
         terminated(opt(newline), eof),
@@ -147,10 +147,8 @@ pub fn parse_mtif(input: &str) -> IResult<&str, Vec<MTIFEntry>> {
  */
 #[cfg(test)]
 mod tests {
-    use nom_bufreader::{bufreader::BufReader, Parse};
-    use std::fs;
-
     use super::*;
+    use std::fs;
 
     #[test]
     fn test_parse_metadata_section() {

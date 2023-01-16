@@ -12,7 +12,7 @@ pub fn parse_image_data(input: &str) -> IResult<&str, MetaDataField> {
     let (input, _) = bytes::complete::tag("IMAGE: ")(input)?;
     let (input, text) = parse_until_line_ending(input)?;
 
-    Ok((input, MetaDataField::Author(text)))
+    Ok((input, MetaDataField::Image(text)))
 }
 
 #[cfg(test)]
@@ -24,7 +24,7 @@ mod tests {
     fn test_parse_author_data() {
         assert_eq!(
             parse_image_data("IMAGE: Foo Bar\n"),
-            Ok(("", MetaDataField::Author("Foo Bar")))
+            Ok(("", MetaDataField::Image("Foo Bar")))
         );
     }
 }

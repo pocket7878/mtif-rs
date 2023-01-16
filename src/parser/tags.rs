@@ -4,11 +4,8 @@ use nom::{
         self,
         complete::{tag, take_while},
     },
-    character::{
-        self,
-        complete::{newline, satisfy},
-    },
-    multi::{many0, separated_list0},
+    character::{self, complete::newline},
+    multi::separated_list0,
     sequence, IResult,
 };
 

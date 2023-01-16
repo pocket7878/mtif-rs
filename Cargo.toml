@@ -9,3 +9,6 @@ version = "0.1.0"
 nom = "7"
 nom-bufreader = "0.2.0"
 time = {version = "0.3.17", features = ["std", "macros"]}
+
+[dev-dependencies]
+insta = "1.26.0"

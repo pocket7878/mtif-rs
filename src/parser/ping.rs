@@ -1,11 +1,8 @@
-use std::ops::Mul;
-
 use nom::{
     branch, bytes, character::complete::newline, multi::many0, sequence::terminated, IResult,
 };
 
 use super::{
-    date::parse_date_data,
     utils::{parse_date_value, parse_multiline_text, parse_until_line_ending},
     MultiLineField,
 };
