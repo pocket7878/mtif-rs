@@ -5,6 +5,6 @@
 
 [Movable Type Import Format](https://movabletype.org/documentation/appendices/import-export-format.html) parser in Rust.
 
-## License
+## Licence
 
-See the [LICENSE](LICENSE).
+See the [LICENCE](LICENCE).
