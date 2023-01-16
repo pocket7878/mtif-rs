@@ -1,6 +1,9 @@
 use nom::{
     branch,
-    bytes::{self, complete::tag},
+    bytes::{
+        self,
+        complete::{tag, take_while},
+    },
     character::{
         self,
         complete::{newline, satisfy},
@@ -11,22 +14,18 @@ use nom::{
 
 use super::MetaDataField;
 
-fn parse_quoted_tag_entry(input: &str) -> IResult<&str, String> {
+fn parse_quoted_tag_entry(input: &str) -> IResult<&str, &str> {
     let (input, _) = character::complete::char('"')(input)?;
-    let (input, contents) = many0(satisfy(|c| c != '"' && c != '\n'))(input)?;
+    let (input, contents) = take_while(|c| c != '"' && c != '\n')(input)?;
     let (input, _) = character::complete::char('"')(input)?;
 
-    return Ok((input, contents.into_iter().collect()));
+    return Ok((input, contents));
 }
 
-fn parse_non_quoted_tag_entry(input: &str) -> IResult<&str, String> {
-    let is_non_quoted_tag_contents = |c: char| {
-        let result = !c.is_whitespace() && c != '\n' && c != ',';
-        return result;
-    };
-    let (input, value) = many0(satisfy(|c| is_non_quoted_tag_contents(c)))(input)?;
+fn parse_non_quoted_tag_entry(input: &str) -> IResult<&str, &str> {
+    let (input, value) = take_while(|c: char| !c.is_whitespace() && c != '\n' && c != ',')(input)?;
 
-    return Ok((input, value.into_iter().collect()));
+    return Ok((input, value));
 }
 
 pub fn parse_tags_data(input: &str) -> IResult<&str, MetaDataField> {
@@ -35,10 +34,7 @@ pub fn parse_tags_data(input: &str) -> IResult<&str, MetaDataField> {
     let (input, tag_entries) =
         sequence::terminated(separated_list0(tag(","), tag_entry_parser), newline)(input)?;
 
-    return Ok((
-        input,
-        MetaDataField::Tags(tag_entries.iter().map(|s| s.to_string()).collect()),
-    ));
+    return Ok((input, MetaDataField::Tags(tag_entries)));
 }
 
 #[cfg(test)]
@@ -47,24 +43,14 @@ mod tests {
 
     #[test]
     fn test_parse_quoted_tag_entry() {
-        assert_eq!(
-            parse_quoted_tag_entry(r#""foo bar""#),
-            Ok(("", "foo bar".to_string()))
-        );
+        assert_eq!(parse_quoted_tag_entry(r#""foo bar""#), Ok(("", "foo bar")));
     }
 
     #[test]
     fn test_parse_tags_data() {
         assert_eq!(
             parse_tags_data("TAGS: \"Movable Type\",foo,bar\n"),
-            Ok((
-                "",
-                MetaDataField::Tags(vec![
-                    "Movable Type".to_string(),
-                    "foo".to_string(),
-                    "bar".to_string()
-                ])
-            ))
+            Ok(("", MetaDataField::Tags(vec!["Movable Type", "foo", "bar"])))
         );
     }
 }

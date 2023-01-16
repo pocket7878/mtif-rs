@@ -6,7 +6,7 @@ pub fn parse_body_data(input: &str) -> IResult<&str, MultiLineField> {
     let (input, _) = bytes::complete::tag("BODY:\n")(input)?;
     let (input, text) = parse_multiline_text(input)?;
 
-    Ok((input, MultiLineField::Body(text.to_string())))
+    Ok((input, MultiLineField::Body(text)))
 }
 
 #[cfg(test)]
@@ -17,7 +17,7 @@ mod tests {
     fn test_parse_body_data() {
         assert_eq!(
             parse_body_data("BODY:\nFoo Bar\nBaz Qux\n\n-----\n"),
-            Ok(("", MultiLineField::Body("Foo Bar\nBaz Qux\n\n".to_string())))
+            Ok(("", MultiLineField::Body("Foo Bar\nBaz Qux\n\n")))
         );
     }
 }

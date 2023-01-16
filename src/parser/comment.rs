@@ -70,26 +70,26 @@ pub fn parse_comment_data(input: &str) -> IResult<&str, MultiLineField> {
 
     let comment = MultiLineField::Comment {
         author: fields.iter().find_map(|f| match f {
-            CommentField::Author(author) => Some(author.to_string()),
+            CommentField::Author(author) => Some(*author),
             _ => None,
         }),
         email: fields.iter().find_map(|f| match f {
-            CommentField::Email(email) => Some(email.to_string()),
+            CommentField::Email(email) => Some(*email),
             _ => None,
         }),
         url: fields.iter().find_map(|f| match f {
-            CommentField::Url(url) => Some(url.to_string()),
+            CommentField::Url(url) => Some(*url),
             _ => None,
         }),
         ip: fields.iter().find_map(|f| match f {
-            CommentField::Ip(ip) => Some(ip.to_string()),
+            CommentField::Ip(ip) => Some(*ip),
             _ => None,
         }),
         date: fields.iter().find_map(|f| match f {
             CommentField::Date(date) => Some(*date),
             _ => None,
         }),
-        text: text.to_string(),
+        text: text,
     };
 
     Ok((input, comment))
@@ -115,12 +115,12 @@ mod tests {
             text,
         } = result
         {
-            assert_eq!(author, Some("author".to_string()));
-            assert_eq!(email, Some("sample@example.com".to_string()));
-            assert_eq!(url, Some("https://example.com/".to_string()));
-            assert_eq!(ip, Some("192.0.2.0".to_string()));
+            assert_eq!(author, Some("author"));
+            assert_eq!(email, Some("sample@example.com"));
+            assert_eq!(url, Some("https://example.com/"));
+            assert_eq!(ip, Some("192.0.2.0"));
             assert_eq!(date, Some(time::macros::datetime!(2023-12-31 13:34:56)));
-            assert_eq!(text, "Foo Bar\nBaz Qux\n\n".to_string());
+            assert_eq!(text, "Foo Bar\nBaz Qux\n\n");
         }
     }
 }

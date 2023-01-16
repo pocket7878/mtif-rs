@@ -2,8 +2,6 @@ use nom::{bytes, IResult};
 
 use super::MetaDataField;
 
-use super::utils::parse_num_bool_flag;
-
 // NO ENTRY: 1\n
 pub fn parse_no_entry_data(input: &str) -> IResult<&str, MetaDataField> {
     let (input, _) = bytes::complete::tag("NO ENTRY: 1\n")(input)?;

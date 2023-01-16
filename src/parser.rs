@@ -38,49 +38,49 @@ use nom::{
 const multiline_data_separator: &str = "-----\n";
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum MetaDataField {
-    Author(String),
-    Title(String),
-    BaseName(String),
+pub enum MetaDataField<'a> {
+    Author(&'a str),
+    Title(&'a str),
+    BaseName(&'a str),
     Status(Status),
     AllowComments(bool),
     AllowPings(bool),
     ConvertBreaks(ConvertBreaks),
-    Category(String),
-    PrimaryCategory(String),
-    Tags(Vec<String>),
+    Category(&'a str),
+    PrimaryCategory(&'a str),
+    Tags(Vec<&'a str>),
     Date(time::PrimitiveDateTime),
     NoEntry,
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum MultiLineField {
-    Body(String),
-    ExtendedBody(String),
-    Excerpt(String),
-    Keywords(String),
+pub enum MultiLineField<'a> {
+    Body(&'a str),
+    ExtendedBody(&'a str),
+    Excerpt(&'a str),
+    Keywords(&'a str),
     Comment {
-        author: Option<String>,
-        email: Option<String>,
-        url: Option<String>,
-        ip: Option<String>,
+        author: Option<&'a str>,
+        email: Option<&'a str>,
+        url: Option<&'a str>,
+        ip: Option<&'a str>,
         date: Option<time::PrimitiveDateTime>,
-        text: String,
+        text: &'a str,
     },
     Ping {
-        title: Option<String>,
-        url: Option<String>,
-        ip: Option<String>,
+        title: Option<&'a str>,
+        url: Option<&'a str>,
+        ip: Option<&'a str>,
         date: Option<time::PrimitiveDateTime>,
-        blog_name: Option<String>,
-        text: String,
+        blog_name: Option<&'a str>,
+        text: &'a str,
     },
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub struct MTIFEntry {
-    pub metadata: Vec<MetaDataField>,
-    pub multiline_data: Vec<MultiLineField>,
+pub struct MTIFEntry<'a> {
+    pub metadata: Vec<MetaDataField<'a>>,
+    pub multiline_data: Vec<MultiLineField<'a>>,
 }
 
 // Meta data parsers
@@ -156,8 +156,8 @@ mod tests {
             Ok((
                 "",
                 vec![
-                    MetaDataField::Author("Foo Bar".to_string()),
-                    MetaDataField::Title("Baz Qux".to_string())
+                    MetaDataField::Author("Foo Bar"),
+                    MetaDataField::Title("Baz Qux")
                 ]
             ))
         );

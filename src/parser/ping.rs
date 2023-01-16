@@ -70,26 +70,26 @@ pub fn parse_ping_data(input: &str) -> IResult<&str, MultiLineField> {
 
     let ping = MultiLineField::Ping {
         title: fields.iter().find_map(|f| match f {
-            PingField::Title(title) => Some(title.to_string()),
+            PingField::Title(title) => Some(*title),
             _ => None,
         }),
         url: fields.iter().find_map(|f| match f {
-            PingField::Url(url) => Some(url.to_string()),
+            PingField::Url(url) => Some(*url),
             _ => None,
         }),
         ip: fields.iter().find_map(|f| match f {
-            PingField::Ip(ip) => Some(ip.to_string()),
+            PingField::Ip(ip) => Some(*ip),
             _ => None,
         }),
         blog_name: fields.iter().find_map(|f| match f {
-            PingField::BlogName(blog_name) => Some(blog_name.to_string()),
+            PingField::BlogName(blog_name) => Some(*blog_name),
             _ => None,
         }),
         date: fields.iter().find_map(|f| match f {
             PingField::Date(date) => Some(*date),
             _ => None,
         }),
-        text: text.to_string(),
+        text: text,
     };
 
     Ok((input, ping))
@@ -115,12 +115,12 @@ mod tests {
             text,
         } = result
         {
-            assert_eq!(title, Some("sample title".to_string()));
-            assert_eq!(url, Some("https://example.com/".to_string()));
-            assert_eq!(ip, Some("192.0.2.0".to_string()));
-            assert_eq!(blog_name, Some("sample blog name".to_string()));
+            assert_eq!(title, Some("sample title"));
+            assert_eq!(url, Some("https://example.com/"));
+            assert_eq!(ip, Some("192.0.2.0"));
+            assert_eq!(blog_name, Some("sample blog name"));
             assert_eq!(date, Some(time::macros::datetime!(2023-12-31 13:34:56)));
-            assert_eq!(text, "Foo Bar\nBaz Qux\n\n".to_string());
+            assert_eq!(text, "Foo Bar\nBaz Qux\n\n");
         }
     }
 }
