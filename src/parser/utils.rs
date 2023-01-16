@@ -78,7 +78,7 @@ pub fn parse_date_value(input: &str) -> IResult<&str, time::PrimitiveDateTime> {
 }
 
 pub fn parse_multiline_text(input: &str) -> IResult<&str, &str> {
-    let multiline_data_separator: &str = "-----\n";
+    let multiline_data_separator: &str = "\n-----\n";
     sequence::terminated(
         bytes::complete::take_until(multiline_data_separator),
         bytes::complete::take(multiline_data_separator.len()),

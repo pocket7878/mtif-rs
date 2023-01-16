@@ -17,7 +17,7 @@ mod tests {
     fn test_parse_keywords_data() {
         assert_eq!(
             parse_keywords_data("KEYWORDS:\nFoo Bar\nBaz Qux\n\n-----\n"),
-            Ok(("", MultiLineField::Keywords("Foo Bar\nBaz Qux\n\n")))
+            Ok(("", MultiLineField::Keywords("Foo Bar\nBaz Qux\n")))
         );
     }
 }

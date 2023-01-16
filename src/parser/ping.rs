@@ -120,7 +120,7 @@ mod tests {
             assert_eq!(ip, Some("192.0.2.0"));
             assert_eq!(blog_name, Some("sample blog name"));
             assert_eq!(date, Some(time::macros::datetime!(2023-12-31 13:34:56)));
-            assert_eq!(text, "Foo Bar\nBaz Qux\n\n");
+            assert_eq!(text, "Foo Bar\nBaz Qux\n");
         }
     }
 }

@@ -17,7 +17,7 @@ mod tests {
     fn test_parse_excerpt_data() {
         assert_eq!(
             parse_excerpt_data("EXCERPT:\nFoo Bar\nBaz Qux\n\n-----\n"),
-            Ok(("", MultiLineField::Excerpt("Foo Bar\nBaz Qux\n\n")))
+            Ok(("", MultiLineField::Excerpt("Foo Bar\nBaz Qux\n")))
         );
     }
 }

@@ -13,6 +13,7 @@ mod convert_breaks;
 mod date;
 mod excerpt;
 mod extended_body;
+mod image;
 mod keywords;
 mod no_entry;
 mod ping;
@@ -27,15 +28,12 @@ use crate::model::{ConvertBreaks, MetaData, Status};
 use nom::{
     branch,
     bytes::{self},
-    character::complete::{newline, satisfy},
-    combinator::eof,
-    error::ErrorKind,
+    character::complete::newline,
+    combinator::{eof, opt},
     multi::{self},
     sequence::{self, terminated},
     IResult,
 };
-
-const multiline_data_separator: &str = "-----\n";
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum MetaDataField<'a> {
@@ -50,6 +48,7 @@ pub enum MetaDataField<'a> {
     PrimaryCategory(&'a str),
     Tags(Vec<&'a str>),
     Date(time::PrimitiveDateTime),
+    Image(&'a str),
     NoEntry,
 }
 
@@ -98,6 +97,7 @@ fn parse_metadata_section(input: &str) -> IResult<&str, Vec<MetaDataField>> {
         date::parse_date_data,
         tags::parse_tags_data,
         no_entry::parse_no_entry_data,
+        image::parse_image_data,
     ));
 
     sequence::terminated(
@@ -136,7 +136,10 @@ fn parse_mtif_entry(input: &str) -> IResult<&str, MTIFEntry> {
 }
 
 pub fn parse_mtif(input: &str) -> IResult<&str, Vec<MTIFEntry>> {
-    terminated(multi::separated_list0(newline, parse_mtif_entry), eof)(input)
+    terminated(
+        multi::separated_list0(newline, parse_mtif_entry),
+        terminated(opt(newline), eof),
+    )(input)
 }
 
 /*
@@ -166,7 +169,6 @@ mod tests {
     #[test]
     fn test_parse_mtif() {
         let contents = fs::read_to_string("./example/example.txt").unwrap();
-        dbg!(&contents);
         let (rest, entries) = parse_mtif(&contents).unwrap();
         assert_eq!(rest, "");
         assert_eq!(entries.len(), 2);

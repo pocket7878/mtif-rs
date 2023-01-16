@@ -17,7 +17,7 @@ mod tests {
     fn test_parse_body_data() {
         assert_eq!(
             parse_body_data("BODY:\nFoo Bar\nBaz Qux\n\n-----\n"),
-            Ok(("", MultiLineField::Body("Foo Bar\nBaz Qux\n\n")))
+            Ok(("", MultiLineField::Body("Foo Bar\nBaz Qux\n")))
         );
     }
 }
